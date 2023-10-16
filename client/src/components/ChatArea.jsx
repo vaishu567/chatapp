@@ -50,6 +50,21 @@ const ChatArea = ({ props }) => {
         <MessageSelf />
         <MessageOthers />
         <MessageSelf />
+        <MessageOthers />
+        <MessageSelf />
+        <MessageOthers />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
+        <MessageSelf />
       </div>
       <div className="text-input-area ">
         <input

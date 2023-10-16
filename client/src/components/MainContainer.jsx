@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/style.css";
 import SideBar from "./SideBar";
 import ChatArea from "./ChatArea";
+import WelcomePage from "./WelcomePage";
 
 const MainContainer = () => {
   const [converstions, setConversations] = useState([
@@ -13,7 +14,8 @@ const MainContainer = () => {
   return (
     <div className="main-container">
       <SideBar />
-      <ChatArea props={converstions[0]} />
+      <WelcomePage />
+      {/* <ChatArea props={converstions[0]} /> */}
     </div>
   );
 };
