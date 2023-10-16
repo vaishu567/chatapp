@@ -5,6 +5,7 @@ import ChatArea from "./ChatArea";
 import WelcomePage from "./WelcomePage";
 import CreateGroups from "./CreateGroups";
 import OnlineUsers from "./OnlineUsers";
+import { Outlet } from "react-router-dom";
 
 const MainContainer = () => {
   const [converstions, setConversations] = useState([
@@ -16,10 +17,11 @@ const MainContainer = () => {
   return (
     <div className="main-container">
       <SideBar />
+      <Outlet />
       {/* <CreateGroups /> */}
       {/* <WelcomePage /> */}
       {/* <ChatArea props={converstions[0]} /> */}
-      <OnlineUsers />
+      {/* <OnlineUsers /> */}
     </div>
   );
 };

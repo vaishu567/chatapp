@@ -12,8 +12,14 @@ import "../styles/style.css";
 import MessageOthers from "./MessageOthers";
 import MessageSelf from "./MessageSelf";
 
-const ChatArea = ({ props }) => {
+const ChatArea = () => {
   const [value, setValue] = useState(null);
+  const [converstions, setConversations] = useState([
+    { name: "Yuan", lastMessage: "Hello, are u up?", timeStamp: "today" },
+    { name: "kurn", lastMessage: "done?", timeStamp: "today" },
+    { name: "poona", lastMessage: "okay!", timeStamp: "today" },
+    { name: "erum", lastMessage: "yeyy", timeStamp: "today" },
+  ]);
 
   return (
     <div className="chatArea-container">
@@ -24,8 +30,8 @@ const ChatArea = ({ props }) => {
           </IconButton>
         </p>
         <div className="header-text">
-          <p className="con-title">{props.name}</p>
-          <p className="con-timeStamp">{props.timeStamp}</p>
+          <p className="con-title">{converstions[0].name}</p>
+          <p className="con-timeStamp">{converstions[0].timeStamp}</p>
         </div>
         <div className="call-icon">
           <IconButton>
