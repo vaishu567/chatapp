@@ -329,3 +329,14 @@
   margin-top: 15px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
 }
+
+.ug-header {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 10px 15px;
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-bottom: 25px;
+}
