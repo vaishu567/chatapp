@@ -3,6 +3,8 @@ import "../styles/style.css";
 import SideBar from "./SideBar";
 import ChatArea from "./ChatArea";
 import WelcomePage from "./WelcomePage";
+import CreateGroups from "./CreateGroups";
+import OnlineUsers from "./OnlineUsers";
 
 const MainContainer = () => {
   const [converstions, setConversations] = useState([
@@ -14,8 +16,10 @@ const MainContainer = () => {
   return (
     <div className="main-container">
       <SideBar />
-      <WelcomePage />
+      {/* <CreateGroups /> */}
+      {/* <WelcomePage /> */}
       {/* <ChatArea props={converstions[0]} /> */}
+      <OnlineUsers />
     </div>
   );
 };
