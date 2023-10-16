@@ -18,7 +18,7 @@ const SideBar = () => {
     { name: "erum", lastMessage: "yeyy", timeStamp: "today" },
   ]);
   return (
-    <div className="sidebar-conatiner">
+    <div className="sidebar-container">
       <div className="sb-header">
         <div>
           <IconButton>
