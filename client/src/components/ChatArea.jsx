@@ -73,6 +73,12 @@ const ChatArea = () => {
         <MessageSelf />
       </div>
       <div className="text-input-area ">
+        <IconButton>
+          <SentimentSatisfiedAltIcon />
+        </IconButton>
+        <IconButton>
+          <AttachFileIcon />
+        </IconButton>
         <input
           type="text"
           placeholder="Type a message"
