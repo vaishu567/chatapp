@@ -13,7 +13,7 @@ import MessageOthers from "./MessageOthers";
 import MessageSelf from "./MessageSelf";
 
 const ChatArea = () => {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState("");
   const [converstions, setConversations] = useState([
     { name: "Yuan", lastMessage: "Hello, are u up?", timeStamp: "today" },
     { name: "kurn", lastMessage: "done?", timeStamp: "today" },
