@@ -125,7 +125,6 @@
 
 .chatarea-header {
   display: flex;
-  align-items: center;
   gap: 10px;
   background-color: white;
   padding: 10px 10px;
@@ -343,4 +342,109 @@
   justify-content: space-between;
   flex-direction: row;
   margin-bottom: 25px;
+}
+
+@media only screen and (max-width: 40em) {
+  .sb-search {
+    display: none;
+  }
+
+  .sb-conversation {
+    display: none;
+  }
+
+  .sb-header {
+    flex-direction: column;
+    flex: 1;
+    width: min-content;
+  }
+  .chatArea-container {
+    width: 95vw;
+    flex: 1;
+  }
+  .chatarea-header {
+    gap: 4px;
+  }
+  .sidebar-container {
+    flex: 0 !important;
+  }
+  .main-container {
+    width: 100vw;
+    height: 100vh;
+    margin: 10px;
+  }
+  .search-box {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  .sb-search {
+    display: none;
+  }
+
+  .sb-conversation {
+    display: none;
+  }
+
+  .sb-header {
+    flex-direction: column;
+    flex: 1;
+    width: min-content;
+  }
+  .chatArea-container {
+    width: 100vw;
+    flex: 1;
+  }
+  .chatarea-header {
+    gap: 4px;
+  }
+  .sidebar-container {
+    flex: 0 !important;
+  }
+  .main-container {
+    width: 100vw;
+    height: 100vh;
+    margin: 10px;
+  }
+  .search-box {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .sb-search {
+    display: none;
+  }
+
+  .sb-conversation {
+    display: none;
+  }
+  .createGroups-container {
+    margin: auto;
+  }
+
+  .sb-header {
+    flex-direction: column;
+    flex: 1;
+    width: min-content;
+  }
+  .chatArea-container {
+    width: 100vw;
+    flex: 1;
+  }
+  .chatarea-header {
+    gap: 4px;
+  }
+  .sidebar-container {
+    flex: 0 !important;
+  }
+  .main-container {
+    width: 100vw;
+    height: 100vh;
+    margin: 10px;
+  }
+  .search-box {
+    width: 40%;
+  }
 }

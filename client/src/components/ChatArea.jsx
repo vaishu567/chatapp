@@ -22,7 +22,7 @@ const ChatArea = () => {
   ]);
 
   return (
-    <div className="chatArea-container">
+    <div className="chatArea-container  dea">
       <div className="chatarea-header">
         <p className="con-icon">
           <IconButton>
