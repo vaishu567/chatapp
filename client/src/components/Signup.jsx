@@ -4,18 +4,25 @@ import logo from "../icons/wechat.png";
 import "../styles/style.css";
 import { Button, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
-const Login = () => {
+const Signup = () => {
   return (
     <div className="login-container">
       <div className="image-container">
         <img src={logo} alt="logo" className="welcome-logo" />
       </div>
       <div className="login-box">
-        <h2 className="texth">Login to your Account</h2>
+        <h1 className="texth">Create Your Account</h1>
         <TextField
           id="outlined-basic"
           label="Enter User Name"
           type="text"
+          variant="outlined"
+          className="search-box"
+        />
+        <TextField
+          id="outlined-basic"
+          label="Enter Email Address"
+          type="email"
           variant="outlined"
           className="search-box"
         />
@@ -28,14 +35,14 @@ const Login = () => {
           autoComplete="current-password"
         />
         <Button variant="contained" color="success">
-          Login
+          Signup
         </Button>
         <p className="con-timeStamp">
-          Not a member? <Link to="/signup">Create an Account</Link>
+          Already a member? <Link to="/">Login</Link>
         </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Signup;
