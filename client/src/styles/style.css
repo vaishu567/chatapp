@@ -192,10 +192,13 @@
   margin-top: 0px;
   border-radius: 15px;
   display: flex;
-  justify-content: space-between;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
 }
 
+.box-input {
+  width: 80%;
+  margin-right: 15px;
+}
 .other-msg-container {
   background-color: #fff;
 }
@@ -446,5 +449,9 @@
   }
   .search-box {
     width: 40%;
+  }
+  .box-input {
+    width: 80%;
+    margin-right: 15px;
   }
 }

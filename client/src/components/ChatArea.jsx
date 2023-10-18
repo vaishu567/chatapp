@@ -83,18 +83,18 @@ const ChatArea = () => {
           type="text"
           placeholder="Type a message"
           value={value}
-          className="search-box"
+          className="search-box  box-input"
           onChange={(e) => {
             setValue(e.target.value);
           }}
         />
 
         {value === "" ? (
-          <IconButton>
+          <IconButton className="end">
             <KeyboardVoiceOutlinedIcon />
           </IconButton>
         ) : (
-          <IconButton>
+          <IconButton className="end">
             <SendIcon />
           </IconButton>
         )}
