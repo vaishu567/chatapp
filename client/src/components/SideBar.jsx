@@ -10,6 +10,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
 import ConversationsItem from "./ConversationsItem";
 import { useNavigate } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
+import axios from "axios";
+import { URL } from "../url";
 
 const SideBar = () => {
   const [lightTheme, setLightTheme] = useState(true);
@@ -20,6 +23,23 @@ const SideBar = () => {
     { name: "erum", lastMessage: "yeyy", timeStamp: "today" },
   ]);
   const navigate = useNavigate();
+  const logOutHandler = async () => {
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const response = await axios.get(URL + "/user/logout", config, {
+        withCredentials: true,
+      });
+      console.log("Logout:", response);
+      localStorage.removeItem("userData");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="sidebar-container">
       <div className={"sb-header"}>
@@ -59,6 +79,9 @@ const SideBar = () => {
           >
             {lightTheme && <NightModeIcon />}
             {!lightTheme && <LightModeIcon />}
+          </IconButton>
+          <IconButton onClick={logOutHandler}>
+            <LogoutIcon />
           </IconButton>
         </div>
       </div>

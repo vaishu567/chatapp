@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/style.css";
 import Toaster from "./Toaster";
+import { URL } from "../url";
 const Login = () => {
   const [showlogin, setShowLogin] = useState(false);
   const [data, setData] = useState({ name: "", email: "", password: "" });
@@ -19,7 +20,7 @@ const Login = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const loginHandler = async (e) => {
+  const loginHandler = async () => {
     setLoading(true);
     console.log(data);
     try {
@@ -28,15 +29,13 @@ const Login = () => {
           "Content-type": "application/json",
         },
       };
-      const response = await axios.post(
-        "http://localhost:5000/user/login/",
-        data,
-        config
-      );
+      const response = await axios.post(URL + "/user/login", data, config, {
+        withCredentials: true,
+      });
       console.log("Login :", response);
       setLogInStatus({ msg: "Success", key: Math.random() });
-      setLoading(false);
       localStorage.setItem("userData", JSON.stringify(response));
+      setLoading(false);
       navigate("/app/welcome");
     } catch (err) {
       console.log(err);
@@ -48,7 +47,7 @@ const Login = () => {
     setLoading(false);
   };
 
-  const signUpHandler = async (e) => {
+  const signUpHandler = async () => {
     setLoading(true);
     console.log(data);
     try {
@@ -57,11 +56,7 @@ const Login = () => {
           "Content-type": "application/json",
         },
       };
-      const response = await axios.post(
-        "http://localhost:5000/user/register/",
-        data,
-        config
-      );
+      const response = await axios.post(URL + "/user/register", data, config);
       console.log("Login :", response);
       setSignInStatus({ msg: "Success", key: Math.random() });
       navigate("/app/welcome");
@@ -69,18 +64,18 @@ const Login = () => {
       setLoading(false);
     } catch (err) {
       console.log(err);
-      if (err.response.status === 405) {
-        setLogInStatus({
-          msg: "User with this email ID already exists",
-          key: Math.random(),
-        });
-      }
-      if (err.response.status === 406) {
-        setLogInStatus({
-          msg: "User Name already Taken, please take another one",
-          key: Math.random(),
-        });
-      }
+      // if (err.response.status === 405) {
+      //   setLogInStatus({
+      //     msg: "User with this email ID already exists",
+      //     key: Math.random(),
+      //   });
+      // }
+      // if (err.response.status === 406) {
+      //   setLogInStatus({
+      //     msg: "User Name already Taken, please take another one",
+      //     key: Math.random(),
+      //   });
+      // }
       setLoading(false);
     }
   };
@@ -105,6 +100,7 @@ const Login = () => {
               type="text"
               variant="outlined"
               className="search-box"
+              name="name"
               onChange={changeHandler}
             />
             <TextField
@@ -112,11 +108,12 @@ const Login = () => {
               label="Enter Password"
               type="password"
               variant="outlined"
+              name="password"
               className="search-box"
               autoComplete="current-password"
               onChange={changeHandler}
             />
-            <Button variant="contained" color="success">
+            <Button variant="contained" color="success" onClick={loginHandler}>
               Login
             </Button>
             <p className="con-timeStamp">
@@ -144,14 +141,16 @@ const Login = () => {
               type="text"
               variant="outlined"
               className="search-box"
+              name="name"
               onChange={changeHandler}
             />
             <TextField
-              id="outlined-basic"
+              id="outlined-email"
               label="Enter Email Address"
               type="email"
               variant="outlined"
               className="search-box"
+              name="email"
               onChange={changeHandler}
             />
             <TextField
@@ -160,10 +159,11 @@ const Login = () => {
               type="password"
               variant="outlined"
               className="search-box"
+              name="password"
               autoComplete="current-password"
               onChange={changeHandler}
             />
-            <Button variant="contained" color="success">
+            <Button variant="contained" color="success" onClick={signUpHandler}>
               Signup
             </Button>
             <p className="con-timeStamp">
