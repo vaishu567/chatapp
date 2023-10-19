@@ -11,8 +11,8 @@ const Login = () => {
   const [data, setData] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
-  const [logInStatus, setLogInStatus] = React.useState("");
-  const [signInStatus, setSignInStatus] = React.useState("");
+  const [logInStatus, setLogInStatus] = useState("");
+  const [signInStatus, setSignInStatus] = useState("");
 
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ const Login = () => {
     } catch (err) {
       console.log(err);
       setLogInStatus({
-        mag: "Invalid username or password",
+        msg: "Invalid username or password",
         key: Math.random(),
       });
     }
@@ -64,18 +64,25 @@ const Login = () => {
       setLoading(false);
     } catch (err) {
       console.log(err);
-      // if (err.response.status === 405) {
-      //   setLogInStatus({
-      //     msg: "User with this email ID already exists",
-      //     key: Math.random(),
-      //   });
-      // }
-      // if (err.response.status === 406) {
-      //   setLogInStatus({
-      //     msg: "User Name already Taken, please take another one",
-      //     key: Math.random(),
-      //   });
-      // }
+      console.log(err.response.status);
+      if (err.response.status === 405) {
+        setSignInStatus({
+          msg: err.response.data,
+          key: Math.random(),
+        });
+      }
+      if (err.response.status === 406) {
+        setSignInStatus({
+          msg: err.response.data,
+          key: Math.random(),
+        });
+      }
+      if (err.response.status === 401) {
+        setSignInStatus({
+          msg: err.response.data,
+          key: Math.random(),
+        });
+      }
       setLoading(false);
     }
   };

@@ -4,6 +4,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 const Toaster = ({ message }) => {
   const [open, setOpen] = useState(true);
+  console.log(String(message));
+  const mes = String(message);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -33,7 +35,7 @@ const Toaster = ({ message }) => {
         ]}
       >
         <Alert onClose={handleClose} severity="warning" sx={{ width: "30vw" }}>
-          {message}
+          {mes}
         </Alert>
       </Snackbar>
     </div>

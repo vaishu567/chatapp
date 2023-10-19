@@ -55,14 +55,12 @@ const registerController = asyncHandler(async (req, res) => {
   //check for user already exist
   const userExist = await userModel.findOne({ email });
   if (userExist) {
-    res.status(405);
-    throw new Error("Please use unique Email!");
+    return res.status(405).json("Please use unique Email!");
   }
   //username already exists
   const usernameExists = await userModel.findOne({ name });
   if (usernameExists) {
-    res.status(406);
-    throw new Error("Username already exists!");
+    return res.status(406).json("Username already exists!");
   }
   //create an entry of the user in the database
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -85,9 +83,29 @@ const registerController = asyncHandler(async (req, res) => {
       });
     }
   } else {
-    res.status(400);
-    throw new Error("Registration is not successful!");
+    return res.status(400).json("Registration is not successful!");
   }
 });
 
-module.exports = { loginController, registerController, logoutController };
+const fetchAllUsersController = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = (await userModel.find(keyword)).findIndex({
+    _id: { $ne: req.user._id },
+  });
+  res.send(users);
+});
+
+module.exports = {
+  loginController,
+  registerController,
+  logoutController,
+  fetchAllUsersController,
+};
