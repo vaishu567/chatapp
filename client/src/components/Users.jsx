@@ -67,7 +67,7 @@ const Users = () => {
                       Authorization: `Bearer ${userData.data.token}`,
                     },
                   };
-                  axios.post(URL + "/chat", { userId: user._id }, config);
+                  axios.post(URL + "/chat/", { userId: user._id }, config);
                 }}
               >
                 <p className="con-icon">{<AccountCircleIcon />}</p>
