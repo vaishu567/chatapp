@@ -4,7 +4,7 @@ import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 
 const WelcomePage = () => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
   console.log(userData);
   const nav = useNavigate();
   if (!userData) {

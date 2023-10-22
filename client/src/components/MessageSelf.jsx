@@ -1,12 +1,10 @@
 import React from "react";
 
-const MessageSelf = () => {
-  var props2 = { name: "You", message: "Hello random guy!" };
+const MessageSelf = ({ props2 }) => {
   return (
     <div className="self-msg-container">
       <div className="messageBox">
         <p className="lastMessage">{props2.message}</p>
-        <p className="self-timeStamp">12:10am</p>
       </div>
     </div>
   );

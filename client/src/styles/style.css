@@ -353,6 +353,38 @@
   flex-direction: row;
   margin-bottom: 25px;
 }
+.ug-title {
+  color: rgba(0, 0, 0, 0.54);
+  margin-left: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bolder;
+}
+
+.ug-list {
+  flex: 1;
+  overflow: scroll;
+  scrollbar-width: none;
+  padding: 10px;
+}
+
+.ug-list::-webkit-scrollbar {
+  display: none;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 10px 5px;
+  margin: 10px;
+  transition-duration: 0.5s;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.list-item:hover {
+  background-color: rgb(226, 226, 226);
+}
 
 @media only screen and (max-width: 40em) {
   .sb-search {

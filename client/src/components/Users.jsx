@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../styles/style.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import logo from "../icons/wechat.png";
-import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+// import { myContext } from "./MainContainer";
 
 const Users = () => {
-  const [refresh, setRefresh] = useState(true);
+  //   const { refresh, setRefresh } = useContext(myContext);
   const [users, setUsers] = useState([]);
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
   const navigate = useNavigate();
   if (!userData) {
     console.log("User not Authenticated");
@@ -22,14 +22,17 @@ const Users = () => {
     console.log("Users refreshed");
     const config = {
       headers: {
-        Authorization: `Bearer ${userData.data.token}`,
+        authorization: `Bearer ${userData.data.token}`,
       },
     };
-    axios.get(URL + "/user/fetchUsers", config).then((data) => {
-      console.log("User Data from API", data);
-      setUsers(data.data);
-    });
-  }, [refresh]);
+    axios
+      .get(URL + "/user/fetchUsers", config, { withCredentials: true })
+      .then((data) => {
+        console.log("User Data from API", data);
+        setUsers(data.data);
+      });
+    console.log(users);
+  }, [userData.data.token]);
   return (
     <>
       <div className="list-container">
@@ -42,7 +45,7 @@ const Users = () => {
           <IconButton
             className="icon"
             onClick={() => {
-              setRefresh(!refresh);
+              //   setRefresh(!refresh);
             }}
           >
             <RefreshIcon />
@@ -64,10 +67,12 @@ const Users = () => {
                   console.log("Creating chat with", user.name);
                   const config = {
                     headers: {
-                      Authorization: `Bearer ${userData.data.token}`,
+                      authorization: `Bearer ${userData.data.token}`,
                     },
                   };
-                  axios.post(URL + "/chat/", { userId: user._id }, config);
+                  axios.post(URL + "/chat/", { userId: user._id }, config, {
+                    withCredentials: true,
+                  });
                 }}
               >
                 <p className="con-icon">{<AccountCircleIcon />}</p>

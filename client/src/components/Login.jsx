@@ -34,7 +34,7 @@ const Login = () => {
       });
       console.log("Login :", response);
       setLogInStatus({ msg: "Success", key: Math.random() });
-      localStorage.setItem("userData", JSON.stringify(response));
+      sessionStorage.setItem("userData", JSON.stringify(response));
       setLoading(false);
       navigate("/app/welcome");
     } catch (err) {
@@ -60,7 +60,7 @@ const Login = () => {
       console.log("Login :", response);
       setSignInStatus({ msg: "Success", key: Math.random() });
       navigate("/app/welcome");
-      localStorage.setItem("userData", JSON.stringify(response));
+      sessionStorage.setItem("userData", JSON.stringify(response));
       setLoading(false);
     } catch (err) {
       console.log(err);

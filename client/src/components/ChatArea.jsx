@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -11,96 +11,173 @@ import { IconButton } from "@mui/material";
 import "../styles/style.css";
 import MessageOthers from "./MessageOthers";
 import MessageSelf from "./MessageSelf";
+import { useParams } from "react-router-dom";
+import Skeleton from "@mui/material/Skeleton";
+import axios from "axios";
+// import { myContext } from "./MainContainer";
+import { URL } from "../url";
 
 const ChatArea = () => {
-  const [value, setValue] = useState("");
-  const [converstions, setConversations] = useState([
-    { name: "Yuan", lastMessage: "Hello, are u up?", timeStamp: "today" },
-    { name: "kurn", lastMessage: "done?", timeStamp: "today" },
-    { name: "poona", lastMessage: "okay!", timeStamp: "today" },
-    { name: "erum", lastMessage: "yeyy", timeStamp: "today" },
-  ]);
+  const [messageContent, setMessageContent] = useState("");
+  const dyParams = useParams();
+  const [chat_id, chat_user] = dyParams._id.split("&");
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
+  const [allMessages, setAllMessages] = useState([]);
+  const [allMessagesCopy, setAllMessagesCopy] = useState([]);
 
-  return (
-    <div className="chatArea-container  dea">
-      <div className="chatarea-header">
-        <p className="con-icon">
-          <IconButton>
-            <AccountCircleIcon />
-          </IconButton>
-        </p>
-        <div className="header-text">
-          <p className="con-title">{converstions[0].name}</p>
-          <p className="con-timeStamp">{converstions[0].timeStamp}</p>
-        </div>
-        <div className="call-icon">
-          <IconButton>
-            <VideocamOutlinedIcon />
-          </IconButton>
-          <p className="v"></p>
-          <IconButton>
-            <CallOutlinedIcon />
-          </IconButton>
-        </div>
-        <div>
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      </div>
+  // const { refresh, setRefresh } = useContext(myContext);
+  const [loaded, setloaded] = useState(false);
+  console.log(userData);
 
-      <div className="messages-container">
-        <MessageOthers />
-        <MessageSelf />
-        <MessageOthers />
-        <MessageSelf />
-        <MessageOthers />
-        <MessageSelf />
-        <MessageOthers />
-        <MessageSelf />
-        <MessageOthers />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-        <MessageSelf />
-      </div>
-      <div className="text-input-area ">
-        <IconButton>
-          <SentimentSatisfiedAltIcon />
-        </IconButton>
-        <IconButton>
-          <AttachFileIcon />
-        </IconButton>
-        <input
-          type="text"
-          placeholder="Type a message"
-          value={value}
-          className="search-box  box-input"
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
+  const sendMessage = () => {
+    var data = null;
+    const config = {
+      headers: {
+        authorization: `Bearer ${userData.data.token}`,
+      },
+    };
+    axios
+      .post(
+        URL + "/message/",
+        {
+          content: messageContent,
+          chatId: chat_id,
+        },
+        config
+      )
+      .then(({ response }) => {
+        data = response;
+        console.log("Message Fired");
+      });
+  };
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        authorization: `Bearer ${userData.data.token}`,
+      },
+    };
+    axios.get(URL + "/message/" + chat_id, config).then(({ data }) => {
+      setAllMessages(data);
+      setloaded(true);
+      // socket.emit("join chat", chat_id);
+    });
+    setAllMessagesCopy(allMessages);
+  }, [chat_id, userData.data.token, allMessages]);
+
+  if (!loaded) {
+    return (
+      <div
+        style={{
+          border: "20px",
+          padding: "10px",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        <Skeleton
+          variant="rectangular"
+          sx={{ width: "100%", borderRadius: "10px" }}
+          height={60}
         />
-
-        {value === "" ? (
-          <IconButton className="end">
-            <KeyboardVoiceOutlinedIcon />
-          </IconButton>
-        ) : (
-          <IconButton className="end">
-            <SendIcon />
-          </IconButton>
-        )}
+        <Skeleton
+          variant="rectangular"
+          sx={{ width: "100%", borderRadius: "10px", flexGrow: "1" }}
+        />
+        <Skeleton
+          variant="rectangular"
+          sx={{ width: "100%", borderRadius: "10px" }}
+          height={60}
+        />
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="chatArea-container ">
+        <div className="chatarea-header">
+          <p className="con-icon">
+            <IconButton>
+              <AccountCircleIcon />
+            </IconButton>
+          </p>
+          <div className="header-text">
+            <p className="con-title">{chat_user}</p>
+          </div>
+          <div className="call-icon">
+            <IconButton>
+              <VideocamOutlinedIcon />
+            </IconButton>
+            <p className="v"></p>
+            <IconButton>
+              <CallOutlinedIcon />
+            </IconButton>
+          </div>
+          <div>
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        </div>
+
+        <div className="messages-container">
+          {allMessages
+            .slice(0)
+            .reverse()
+            .map((message, index) => {
+              const sender = message.sender;
+              const self_id = userData.data._id;
+              if (sender._id === self_id) {
+                return <MessageSelf props={message} key={index} />;
+              } else {
+                return <MessageOthers props={message} key={index} />;
+              }
+            })}
+        </div>
+        <div className="text-input-area ">
+          <IconButton>
+            <SentimentSatisfiedAltIcon />
+          </IconButton>
+          <IconButton>
+            <AttachFileIcon />
+          </IconButton>
+          <input
+            type="text"
+            placeholder="Type a message"
+            className="search-box  box-input"
+            value={messageContent}
+            onChange={(e) => {
+              setMessageContent(e.target.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.code === "Enter") {
+                sendMessage();
+                setMessageContent("");
+                // setRefresh(!refresh);
+              }
+            }}
+          />
+
+          {messageContent === "" ? (
+            <IconButton className="end">
+              <KeyboardVoiceOutlinedIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              className="end"
+              onClick={() => {
+                sendMessage();
+                // setRefresh(!refresh);
+              }}
+            >
+              <SendIcon />
+            </IconButton>
+          )}
+        </div>
+      </div>
+    );
+  }
 };
 
 export default ChatArea;
