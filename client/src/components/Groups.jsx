@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Refresh from "@mui/icons-material/Refresh";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { URL } from "../url";
 
 const Groups = () => {
   const [groups, SetGroups] = useState([]);

@@ -97,7 +97,7 @@ const fetchAllUsersController = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const users = (await userModel.find(keyword)).findIndex({
+  const users = await userModel.find(keyword).find({
     _id: { $ne: req.user._id },
   });
   res.send(users);

@@ -7,6 +7,7 @@ import logo from "../icons/wechat.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { URL } from "../url";
 // import { myContext } from "./MainContainer";
 
 const Users = () => {
@@ -25,14 +26,13 @@ const Users = () => {
         authorization: `Bearer ${userData.data.token}`,
       },
     };
-    axios
-      .get(URL + "/user/fetchUsers", config, { withCredentials: true })
-      .then((data) => {
-        console.log("User Data from API", data);
-        setUsers(data.data);
-      });
+    axios.get(URL + "/user/fetchUsers", config).then((data) => {
+      console.log("User Data from API", data);
+      setUsers(data.data);
+    });
     console.log(users);
   }, [userData.data.token]);
+
   return (
     <>
       <div className="list-container">
@@ -57,29 +57,29 @@ const Users = () => {
           </IconButton>
           <input className="search-box" placeholder="search for a user" />
         </div>
-        <div className="ug-list">
-          {users.map((user, index) => {
-            return (
-              <div
-                className="list-item"
-                key={index}
-                onClick={() => {
-                  console.log("Creating chat with", user.name);
-                  const config = {
-                    headers: {
-                      authorization: `Bearer ${userData.data.token}`,
-                    },
-                  };
-                  axios.post(URL + "/chat/", { userId: user._id }, config, {
-                    withCredentials: true,
-                  });
-                }}
-              >
-                <p className="con-icon">{<AccountCircleIcon />}</p>
-                <p className="con-title">{user.name}</p>
-              </div>
-            );
-          })}
+        <div>
+          <div className="ug-list ">
+            {users.map((user, index) => {
+              return (
+                <div
+                  className="list-item"
+                  key={index}
+                  onClick={() => {
+                    console.log("Creating chat with", user.name);
+                    const config = {
+                      headers: {
+                        authorization: `Bearer ${userData.data.token}`,
+                      },
+                    };
+                    axios.post(URL + "/chat/", { userId: user._id }, config);
+                  }}
+                >
+                  <p className="con-icon">{<AccountCircleIcon />}</p>
+                  <p className="con-title">{user.name}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>
