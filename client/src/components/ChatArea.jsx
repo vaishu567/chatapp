@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -27,7 +27,6 @@ const ChatArea = () => {
 
   // const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
-  console.log(userData);
 
   const sendMessage = () => {
     var data = null;
@@ -43,10 +42,16 @@ const ChatArea = () => {
           content: messageContent,
           chatId: chat_id,
         },
-        config
+        config,
+        {
+          withcredentials: true,
+        }
       )
-      .then(({ response }) => {
-        data = response;
+      .then((response) => {
+        // data = response;
+        const dati = [response.data];
+        setAllMessages(dati);
+        // console.log(dati);
         console.log("Message Fired");
       });
   };
@@ -122,18 +127,15 @@ const ChatArea = () => {
         </div>
 
         <div className="messages-container">
-          {allMessages
-            .slice(0)
-            .reverse()
-            .map((message, index) => {
-              const sender = message.sender;
-              const self_id = userData.data._id;
-              if (sender._id === self_id) {
-                return <MessageSelf props={message} key={index} />;
-              } else {
-                return <MessageOthers props={message} key={index} />;
-              }
-            })}
+          {allMessages.slice(0).map((message, index) => {
+            const sender = message.sender;
+            const self_id = userData.data._id;
+            if (sender._id === self_id) {
+              return <MessageSelf props={message} key={index} />;
+            } else {
+              return <MessageOthers props={message} key={index} />;
+            }
+          })}
         </div>
         <div className="text-input-area ">
           <IconButton>
@@ -150,9 +152,9 @@ const ChatArea = () => {
             onChange={(e) => {
               setMessageContent(e.target.value);
             }}
-            onKeyDown={(event) => {
+            onKeyDown={async (event) => {
               if (event.code === "Enter") {
-                sendMessage();
+                await sendMessage();
                 setMessageContent("");
                 // setRefresh(!refresh);
               }

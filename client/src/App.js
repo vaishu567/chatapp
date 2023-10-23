@@ -4,7 +4,7 @@ import Login from "./components/Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import WelcomePage from "./components/WelcomePage";
 import ChatArea from "./components/ChatArea";
-import OnlineUsers from "./components/OnlineUsers";
+// import OnlineUsers from "./components/OnlineUsers";
 import CreateGroups from "./components/CreateGroups";
 import Groups from "./components/Groups";
 import Users from "./components/Users";

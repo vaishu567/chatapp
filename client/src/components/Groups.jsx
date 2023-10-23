@@ -19,7 +19,6 @@ const Groups = () => {
   }
 
   const user = userData.data;
-  console.log(user.token);
   useEffect(() => {
     const config = {
       headers: {
@@ -38,6 +37,7 @@ const Groups = () => {
       <div className="ug-header">
         <img
           src={logo}
+          alt="logo"
           style={{ height: "2rem", width: "2rem", marginLeft: "10px" }}
         />
         <h3 className="text" style={{ color: "#657d65" }}>

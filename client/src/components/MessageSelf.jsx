@@ -1,10 +1,12 @@
 import React from "react";
 
-const MessageSelf = ({ props2 }) => {
+const MessageSelf = ({ props }) => {
+  const mes = { props };
+  console.log(mes);
   return (
     <div className="self-msg-container">
       <div className="messageBox">
-        <p className="lastMessage">{props2.message}</p>
+        <p className="lastMessage">{props.content}</p>
       </div>
     </div>
   );

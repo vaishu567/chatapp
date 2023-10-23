@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/style.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
@@ -30,7 +30,6 @@ const Users = () => {
       console.log("User Data from API", data);
       setUsers(data.data);
     });
-    console.log(users);
   }, [userData.data.token]);
 
   return (
@@ -39,6 +38,7 @@ const Users = () => {
         <div className="ug-header">
           <img
             src={logo}
+            alt="logo"
             style={{ height: "2rem", width: "2rem", marginLeft: "10px" }}
           />
           <p className="ug-title">Available Users</p>

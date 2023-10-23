@@ -14,10 +14,13 @@ const messageModel = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
+    content: {
+      type: mongoose.Schema.Types.String,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-modules.exports = mongoose.model("Message", messageModel);
+module.exports = mongoose.model("Message", messageModel);

@@ -54,6 +54,11 @@
   flex: 1;
   cursor: pointer;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+  overflow-y: auto;
+}
+
+.sb-conversation::-webkit-scrollbar {
+  display: none;
 }
 
 .conversation-container {
@@ -70,6 +75,7 @@
 }
 .sb-conversation :hover {
   background-color: #90b390;
+  border-radius: 15px;
 }
 
 .con-icon {

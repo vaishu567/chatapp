@@ -10,6 +10,7 @@ const OnlineUsers = () => {
       <div className="ug-header">
         <img
           src={logo}
+          alt="logo"
           style={{ height: "2rem", width: "2rem", marginLeft: "10px" }}
         />
         <h3 className="text" style={{ color: "#657d65" }}>

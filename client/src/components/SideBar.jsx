@@ -46,7 +46,6 @@ const SideBar = () => {
   };
 
   const user = userData.data;
-  console.log(user);
   useEffect(() => {
     const config = {
       headers: {
