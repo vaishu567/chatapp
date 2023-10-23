@@ -42,7 +42,7 @@ const CreateGroups = () => {
       URL + "/chat/createGroup",
       {
         name: groupName,
-        users: ["653122c4025439c59285f9d5", "6530f9b56359ddb12510cdf5"],
+        users: [],
       },
       config
     );

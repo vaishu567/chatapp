@@ -1,8 +1,6 @@
 import React from "react";
 
 const MessageSelf = ({ props }) => {
-  const mes = { props };
-  console.log(mes);
   return (
     <div className="self-msg-container">
       <div className="messageBox">

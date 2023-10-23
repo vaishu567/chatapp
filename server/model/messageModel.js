@@ -6,6 +6,10 @@ const messageModel = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    content: {
+      type: String,
+      trim: true,
+    },
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -13,9 +17,6 @@ const messageModel = new mongoose.Schema(
     chat: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
-    },
-    content: {
-      type: mongoose.Schema.Types.String,
     },
   },
   {

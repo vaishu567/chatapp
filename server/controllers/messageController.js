@@ -25,10 +25,10 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   var newMessage = {
     sender: req.user._id,
-    chat: chatId,
     content: content,
+    chat: chatId,
   };
-  console.log(newMessage);
+  // console.log(newMessage);
 
   try {
     var message = await Message.create(newMessage);
@@ -44,7 +44,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     });
 
     await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
-    console.log(message);
+    // console.log(message);
     res.json(message);
   } catch (err) {
     res.status(400);

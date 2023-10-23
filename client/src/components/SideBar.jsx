@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../styles/style.css";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -13,14 +13,15 @@ import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
 import { URL } from "../url";
-// import { myContext } from "./MainContainer";
-// import { useDispatch } from "react-redux";
+import { myContext } from "./MainContainer";
+import { refreshSidebarFun } from "../features/refreshSidebar";
+import { useDispatch } from "react-redux";
 
 const SideBar = () => {
   const [lightTheme, setLightTheme] = useState(true);
   const [converstions, setConversations] = useState([]);
-  // const dispatch = useDispatch();
-  // const { refresh, setRefresh } = useContext(myContext);
+  const dispatch = useDispatch();
+  const { refresh, setRefresh } = useContext(myContext);
   const userData = JSON.parse(sessionStorage.getItem("userData"));
   const navigate = useNavigate();
   if (!userData) {
@@ -56,8 +57,9 @@ const SideBar = () => {
       .get(URL + "/chat/", config, { withCredentials: true })
       .then((response) => {
         setConversations(response.data);
+        setRefresh(!refresh);
       });
-  }, [user.token]);
+  }, [user.token, refresh]);
 
   return (
     <div className="sidebar-container">
@@ -131,7 +133,10 @@ const SideBar = () => {
               <div
                 key={index}
                 onClick={() => {
-                  // setRefresh(!refresh);
+                  console.log("Refresh fired from sidebar");
+                  dispatch(refreshSidebarFun());
+
+                  setRefresh(!refresh);
                 }}
               >
                 <div
@@ -139,6 +144,7 @@ const SideBar = () => {
                   className="conversation-container"
                   onClick={() => {
                     navigate("chat/" + convo._id + "&" + chatName);
+                    dispatch(refreshSidebarFun());
                   }}
                 >
                   <p className="con-icon">

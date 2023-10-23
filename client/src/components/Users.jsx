@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../styles/style.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
@@ -8,13 +8,16 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { URL } from "../url";
-// import { myContext } from "./MainContainer";
+import { refreshSidebarFun } from "../features/refreshSidebar";
+import { myContext } from "./MainContainer";
+import { useDispatch } from "react-redux";
 
 const Users = () => {
-  //   const { refresh, setRefresh } = useContext(myContext);
+  const { refresh, setRefresh } = useContext(myContext);
   const [users, setUsers] = useState([]);
   const userData = JSON.parse(sessionStorage.getItem("userData"));
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   if (!userData) {
     console.log("User not Authenticated");
     navigate(-1);
@@ -29,8 +32,9 @@ const Users = () => {
     axios.get(URL + "/user/fetchUsers", config).then((data) => {
       console.log("User Data from API", data);
       setUsers(data.data);
+      setRefresh(!refresh);
     });
-  }, [userData.data.token]);
+  }, [setRefresh, refresh, userData.data.token]);
 
   return (
     <>
@@ -45,7 +49,8 @@ const Users = () => {
           <IconButton
             className="icon"
             onClick={() => {
-              //   setRefresh(!refresh);
+              setRefresh(!refresh);
+              console.log(refresh);
             }}
           >
             <RefreshIcon />
@@ -72,6 +77,7 @@ const Users = () => {
                       },
                     };
                     axios.post(URL + "/chat/", { userId: user._id }, config);
+                    dispatch(refreshSidebarFun());
                   }}
                 >
                   <p className="con-icon">{<AccountCircleIcon />}</p>

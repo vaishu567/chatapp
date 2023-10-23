@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../styles/style.css";
 import logo from "../icons/wechat.png";
 import { IconButton } from "@mui/material";
@@ -8,9 +8,14 @@ import axios from "axios";
 import Refresh from "@mui/icons-material/Refresh";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { URL } from "../url";
+import { myContext } from "./MainContainer";
+import { refreshSidebarFun } from "../features/refreshSidebar";
+import { useDispatch } from "react-redux";
 
 const Groups = () => {
   const [groups, SetGroups] = useState([]);
+  const { refresh, setRefresh } = useContext(myContext);
+  const dispatch = useDispatch();
   const userData = JSON.parse(sessionStorage.getItem("userData"));
   const nav = useNavigate();
   if (!userData) {
@@ -30,7 +35,7 @@ const Groups = () => {
       .then((response) => {
         SetGroups(response.data);
       });
-  }, [user.token]);
+  }, [user.token, refresh]);
 
   return (
     <div className="list-container">
@@ -46,7 +51,7 @@ const Groups = () => {
         <IconButton
           className="icon"
           onClick={() => {
-            // setRefresh(!refresh);
+            setRefresh(!refresh);
           }}
         >
           <Refresh />
@@ -78,7 +83,7 @@ const Groups = () => {
                   },
                   config
                 );
-                // dispatch(refreshSidebarFun());
+                dispatch(refreshSidebarFun());
               }}
             >
               <p className="con-icon">

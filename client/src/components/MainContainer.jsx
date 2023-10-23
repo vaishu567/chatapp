@@ -1,14 +1,17 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import "../styles/style.css";
-import SideBar from "./SideBar";
 
 import { Outlet } from "react-router-dom";
-
+import SideBar from "./SideBar";
+export const myContext = createContext();
 const MainContainer = () => {
+  const [refresh, setRefresh] = useState(true);
   return (
     <div className="main-container">
-      <SideBar />
-      <Outlet />
+      <myContext.Provider value={{ refresh: refresh, setRefresh: setRefresh }}>
+        <SideBar />
+        <Outlet />
+      </myContext.Provider>
     </div>
   );
 };

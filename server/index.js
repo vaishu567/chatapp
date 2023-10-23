@@ -49,13 +49,20 @@ io.on("connection", (socket) => {
 
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("User joined Room:", room);
+    // console.log("User joined Room:", room);
   });
 
-  socket.on("new message", (newMessageStatus) => {
+  socket.on("newMessage", (newMessageStatus) => {
     var chat = newMessageStatus.chat;
     if (!chat.users) {
       return console.log("chat.users not defined");
     }
+    // console.log(newMessageStatus);
+    const messageData = newMessageStatus;
+    chat.users.forEach((user) => {
+      if (user._id === newMessageStatus.sender._id) return;
+      socket.in(user._id).emit("message received", messageData);
+      console.log("message received", messageData);
+    });
   });
 });

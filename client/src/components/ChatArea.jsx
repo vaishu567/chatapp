@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -14,9 +14,10 @@ import MessageSelf from "./MessageSelf";
 import { useParams } from "react-router-dom";
 import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
-// import { myContext } from "./MainContainer";
+import { io } from "socket.io-client";
+import { myContext } from "./MainContainer";
 import { URL } from "../url";
-
+var socket;
 const ChatArea = () => {
   const [messageContent, setMessageContent] = useState("");
   const dyParams = useParams();
@@ -24,8 +25,9 @@ const ChatArea = () => {
   const userData = JSON.parse(sessionStorage.getItem("userData"));
   const [allMessages, setAllMessages] = useState([]);
   const [allMessagesCopy, setAllMessagesCopy] = useState([]);
+  const [socketConnectionStatus, setSocketConnectionStatus] = useState(false);
 
-  // const { refresh, setRefresh } = useContext(myContext);
+  const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
 
   const sendMessage = () => {
@@ -47,15 +49,33 @@ const ChatArea = () => {
           withcredentials: true,
         }
       )
-      .then((response) => {
-        // data = response;
-        const dati = [response.data];
-        setAllMessages(dati);
-        // console.log(dati);
+      .then((data) => {
+        console.log(data.data);
         console.log("Message Fired");
+        socket.emit("newMessage", data.data);
       });
   };
 
+  //connect to socket
+  useEffect(() => {
+    socket = io(URL);
+    socket.emit("setup", userData);
+    socket.on("connection", () => {
+      setSocketConnectionStatus(!socketConnectionStatus);
+    });
+  }, []);
+
+  //new message received
+  useEffect(() => {
+    socket.on("message received", (newMessage) => {
+      if (!allMessagesCopy || allMessagesCopy._id !== newMessage._id) {
+      } else {
+        setAllMessages([...allMessages], newMessage);
+      }
+    });
+  });
+
+  //fetch chats
   useEffect(() => {
     const config = {
       headers: {
@@ -65,10 +85,10 @@ const ChatArea = () => {
     axios.get(URL + "/message/" + chat_id, config).then(({ data }) => {
       setAllMessages(data);
       setloaded(true);
-      // socket.emit("join chat", chat_id);
+      socket.emit("join chat", chat_id);
     });
     setAllMessagesCopy(allMessages);
-  }, [chat_id, userData.data.token, allMessages]);
+  }, [refresh, chat_id, userData.data.token, allMessages]);
 
   if (!loaded) {
     return (
@@ -152,11 +172,11 @@ const ChatArea = () => {
             onChange={(e) => {
               setMessageContent(e.target.value);
             }}
-            onKeyDown={async (event) => {
+            onKeyDown={(event) => {
               if (event.code === "Enter") {
-                await sendMessage();
+                sendMessage();
                 setMessageContent("");
-                // setRefresh(!refresh);
+                setRefresh(!refresh);
               }
             }}
           />
@@ -170,7 +190,7 @@ const ChatArea = () => {
               className="end"
               onClick={() => {
                 sendMessage();
-                // setRefresh(!refresh);
+                setRefresh(!refresh);
               }}
             >
               <SendIcon />
