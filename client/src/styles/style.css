@@ -13,6 +13,18 @@
   display: flex;
   flex-direction: column;
 }
+.emoji-picker-container {
+  position: absolute;
+  bottom: 95px; /* Adjust this value to position the emoji picker appropriately */
+  right: 1;
+  z-index: 1;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  overflow-y: auto;
+}
 
 .sb-header {
   background-color: white;

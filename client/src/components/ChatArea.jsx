@@ -17,9 +17,11 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import { myContext } from "./MainContainer";
 import { URL } from "../url";
+import EmojiPicker from "emoji-picker-react";
 var socket;
 const ChatArea = () => {
   const [messageContent, setMessageContent] = useState("");
+  const [showEmoji, setShowEmoji] = useState(false);
   const dyParams = useParams();
   const [chat_id, chat_user] = dyParams._id.split("&");
   const userData = JSON.parse(sessionStorage.getItem("userData"));
@@ -29,6 +31,16 @@ const ChatArea = () => {
 
   const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
+
+  const toggleEmojiPicker = () => {
+    setShowEmoji(!showEmoji);
+  };
+
+  const handleEmojiClick = (emojiObject, event) => {
+    // Insert the selected emoji into the message input
+    console.log(emojiObject);
+    setMessageContent(messageContent + emojiObject.emoji);
+  };
 
   const sendMessage = () => {
     var data = null;
@@ -158,7 +170,12 @@ const ChatArea = () => {
           })}
         </div>
         <div className="text-input-area ">
-          <IconButton>
+          {showEmoji && (
+            <div className="emoji-picker-container">
+              <EmojiPicker onEmojiClick={handleEmojiClick} />
+            </div>
+          )}
+          <IconButton onClick={toggleEmojiPicker}>
             <SentimentSatisfiedAltIcon />
           </IconButton>
           <IconButton>
@@ -190,6 +207,7 @@ const ChatArea = () => {
               className="end"
               onClick={() => {
                 sendMessage();
+                setMessageContent("");
                 setRefresh(!refresh);
               }}
             >
