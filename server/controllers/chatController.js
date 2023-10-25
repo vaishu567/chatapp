@@ -79,7 +79,9 @@ const createGroupChat = asyncHandler(async (req, res) => {
   if (!req.body.users || !req.body.name) {
     return res.status(400).send({ message: "Data is insufficient." });
   }
-  var users = JSON.parse(req.body.users);
+  console.log("req.body.users:", req.body.users);
+  const jsonUsers = JSON.stringify(req.body.users);
+  var users = JSON.parse(jsonUsers);
   console.log("chatController/createGroups:", req);
   users.push(req.user);
 

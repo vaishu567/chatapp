@@ -38,15 +38,22 @@ const CreateGroups = () => {
         authorization: `Bearer ${user.token}`,
       },
     };
-    axios.post(
-      URL + "/chat/createGroup",
-      {
-        name: groupName,
-        users: [],
-      },
-      config
-    );
-    nav("/app/groups");
+    axios
+      .post(
+        URL + "/chat/createGroup",
+        {
+          name: groupName,
+          users: [userData.data._id],
+        },
+        config
+      )
+      .then(() => {
+        nav("/app/groups");
+      })
+      .catch((error) => {
+        console.error("Error creating group:", error);
+        // Handle the error as needed (e.g., show an error message to the user)
+      });
   };
   return (
     <>

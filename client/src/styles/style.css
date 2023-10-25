@@ -115,7 +115,17 @@
   color: rgba(0, 0, 0, 0.54);
   justify-content: flex-start;
   display: flex;
-  padding-left: 10px;
+  /* padding-left: 10px; */
+}
+
+.con-msg {
+  grid-template-columns: 1/2/2/4;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.54);
+  justify-content: flex-start;
+  display: flex;
+  font-size: small;
 }
 .con-timeStamp {
   justify-self: flex-end;

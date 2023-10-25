@@ -6,6 +6,8 @@ const chatRoute = require("./routes/chatRoute");
 const messageRoute = require("./routes/messageRoute");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const multer = require("multer");
+const path = require("path");
 
 const app = express();
 
@@ -18,12 +20,35 @@ const connectDB = async () => {
   }
 };
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Define the upload directory
+  },
+  filename: function (req, file, cb) {
+    const fileExtension = path.extname(file.originalname);
+    cb(null, file.fieldname + "-" + Date.now() + fileExtension);
+  },
+});
+
+const upload = multer({ storage });
+
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/user", userRoute);
 app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
+// Handle POST requests for file uploads
+app.post("/upload", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded." });
+  }
+
+  const fileUrl = `/uploads/${req.file.filename}`; // Path to the uploaded file
+  res.status(200).json({ fileUrl });
+});
+
+app.use("/uploads", express.static("uploads"));
 
 const PORT = 5000 || process.env.PORT;
 const server = app.listen(PORT, () => {

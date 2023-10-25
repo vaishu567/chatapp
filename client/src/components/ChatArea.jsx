@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 import KeyboardVoiceOutlinedIcon from "@mui/icons-material/KeyboardVoiceOutlined";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { IconButton } from "@mui/material";
+import { Fab, IconButton, Stack, Tooltip } from "@mui/material";
 import "../styles/style.css";
 import MessageOthers from "./MessageOthers";
 import MessageSelf from "./MessageSelf";
@@ -18,6 +17,11 @@ import { io } from "socket.io-client";
 import { myContext } from "./MainContainer";
 import { URL } from "../url";
 import EmojiPicker from "emoji-picker-react";
+import ImageIcon from "@mui/icons-material/Image";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+
 var socket;
 const ChatArea = () => {
   const [messageContent, setMessageContent] = useState("");
@@ -28,12 +32,14 @@ const ChatArea = () => {
   const [allMessages, setAllMessages] = useState([]);
   const [allMessagesCopy, setAllMessagesCopy] = useState([]);
   const [socketConnectionStatus, setSocketConnectionStatus] = useState(false);
+  const [displayStack, setdisplayStack] = useState(false);
 
   const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
 
   const toggleEmojiPicker = () => {
     setShowEmoji(!showEmoji);
+    setdisplayStack(false);
   };
 
   const handleEmojiClick = (emojiObject, event) => {
@@ -68,6 +74,31 @@ const ChatArea = () => {
       });
   };
 
+  const display = () => {
+    setdisplayStack(!displayStack);
+    setShowEmoji(false);
+  };
+  const Actions = [
+    {
+      color: "#e9f5db",
+      icon: <ImageIcon size="34" />,
+      y: 102,
+      title: "Photo/Video",
+    },
+    {
+      color: "#cfe1b9",
+      icon: <CameraAltIcon size="34" />,
+      y: 172,
+      title: "Image",
+    },
+    {
+      color: "#b5c99a",
+      icon: <InsertDriveFileIcon size="34" />,
+      y: 242,
+      title: "Document",
+    },
+  ];
+
   //connect to socket
   useEffect(() => {
     socket = io(URL);
@@ -75,7 +106,7 @@ const ChatArea = () => {
     socket.on("connection", () => {
       setSocketConnectionStatus(!socketConnectionStatus);
     });
-  }, []);
+  }, [socketConnectionStatus]);
 
   //new message received
   useEffect(() => {
@@ -85,7 +116,7 @@ const ChatArea = () => {
         setAllMessages([...allMessages], newMessage);
       }
     });
-  });
+  }, []);
 
   //fetch chats
   useEffect(() => {
@@ -98,6 +129,7 @@ const ChatArea = () => {
       setAllMessages(data);
       setloaded(true);
       socket.emit("join chat", chat_id);
+      // setIsGroup(isgroup + 1);
     });
     setAllMessagesCopy(allMessages);
   }, [refresh, chat_id, userData.data.token, allMessages]);
@@ -152,9 +184,9 @@ const ChatArea = () => {
             </IconButton>
           </div>
           <div>
-            <IconButton>
+            {/* <IconButton>
               <DeleteIcon />
-            </IconButton>
+            </IconButton> */}
           </div>
         </div>
 
@@ -178,7 +210,26 @@ const ChatArea = () => {
           <IconButton onClick={toggleEmojiPicker}>
             <SentimentSatisfiedAltIcon />
           </IconButton>
-          <IconButton>
+          {displayStack && (
+            <Stack sx={{ position: "relative" }}>
+              {Actions.map((el) => {
+                return (
+                  <Tooltip placement="right" title={el.title}>
+                    <Fab
+                      sx={{
+                        position: "absolute",
+                        top: -el.y,
+                        backgroundColor: el.color,
+                      }}
+                    >
+                      {el.icon}
+                    </Fab>
+                  </Tooltip>
+                );
+              })}
+            </Stack>
+          )}
+          <IconButton onClick={display}>
             <AttachFileIcon />
           </IconButton>
           <input
@@ -192,6 +243,7 @@ const ChatArea = () => {
             onKeyDown={(event) => {
               if (event.code === "Enter") {
                 sendMessage();
+                setShowEmoji(false);
                 setMessageContent("");
                 setRefresh(!refresh);
               }
@@ -207,6 +259,7 @@ const ChatArea = () => {
               className="end"
               onClick={() => {
                 sendMessage();
+                setShowEmoji(false);
                 setMessageContent("");
                 setRefresh(!refresh);
               }}
