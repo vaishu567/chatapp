@@ -8,6 +8,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import NightModeIcon from "@mui/icons-material/Nightlight";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
+import CallIcon from "@mui/icons-material/Call";
 // import ConversationsItem from "./ConversationsItem";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -74,6 +75,13 @@ const SideBar = () => {
           </IconButton>
         </div>
         <div>
+          <IconButton
+            onClick={() => {
+              navigate("calllog");
+            }}
+          >
+            <CallIcon />
+          </IconButton>
           <IconButton
             onClick={() => {
               navigate("users");

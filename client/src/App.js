@@ -9,6 +9,7 @@ import CreateGroups from "./components/CreateGroups";
 import Groups from "./components/Groups";
 import Users from "./components/Users";
 import StartCall from "./components/StartCall";
+import CallLog from "./components/CallLog";
 function App() {
   return (
     <div className="App">
@@ -19,6 +20,7 @@ function App() {
             <Route path="welcome" element={<WelcomePage />} />
             <Route path="chat/:_id" element={<ChatArea />} />
             <Route path="users" element={<Users />} />
+            <Route path="calllog" element={<CallLog />} />
             <Route path="create-groups" element={<CreateGroups />} />
             <Route path="groups" element={<Groups />} />
           </Route>

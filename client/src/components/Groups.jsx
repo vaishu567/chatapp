@@ -45,9 +45,7 @@ const Groups = () => {
           alt="logo"
           style={{ height: "2rem", width: "2rem", marginLeft: "10px" }}
         />
-        <h3 className="text" style={{ color: "#657d65" }}>
-          Available Groups
-        </h3>
+        <h3 className="ug-title">Available Groups</h3>
         <IconButton
           className="icon"
           onClick={() => {
