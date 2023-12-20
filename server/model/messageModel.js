@@ -18,6 +18,9 @@ const messageModel = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
+    file: {
+      type: String,
+    },
   },
   {
     timestamps: true,
