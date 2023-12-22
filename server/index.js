@@ -39,13 +39,34 @@ app.use("/user", userRoute);
 app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
 // Handle POST requests for file uploads
-app.post("/upload", upload.single("file"), (req, res) => {
-  if (!req.file) {
+app.post("/upload", upload.single("file"), async (req, res) => {
+  const { content, chatId, contentType } = req.body;
+  const { file } = req;
+  if (!file) {
     return res.status(400).json({ message: "No file uploaded." });
   }
+  try {
+    let fileUrl;
+    if (file) {
+      fileUrl = `/uploads/${file.filename}`;
+    }
+    const newMessage = await Message.create({
+      sender: req.user._id, // Assuming you have middleware to authenticate the user
+      content,
+      chat: chatId,
+      contentType,
+      file: fileUrl,
+    });
+    // Broadcast the new message to the chat room
+    io.to(chatId).emit("newMessage", newMessage);
+    res.status(200).json(newMessage);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 
-  const fileUrl = `/uploads/${req.file.filename}`; // Path to the uploaded file
-  res.status(200).json({ fileUrl });
+  // const fileUrl = `/uploads/${req.file.filename}`; // Path to the uploaded file
+  // res.status(200).json({ fileUrl });
 });
 
 app.use("/uploads", express.static("uploads"));
@@ -90,4 +111,20 @@ io.on("connection", (socket) => {
       console.log("message received", messageData);
     });
   });
+
+  // socket.on("file_message", (data) => {
+  //   console.log("Received file message", data);
+
+  //   // data:{to,from,text,file}
+
+  //   // get the file extension
+  //   const fileExtension = path.extname(data.file.name);
+
+  //   // generate a unique filename
+  //   const fileName = `${Date.now()}_${Math.floor(
+  //     Math.random() * 1000
+  //   )}${fileExtension}`;
+
+  //   // upload file to AWS s3
+  // });
 });

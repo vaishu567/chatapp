@@ -33,9 +33,35 @@ const ChatArea = () => {
   const [allMessagesCopy, setAllMessagesCopy] = useState([]);
   const [socketConnectionStatus, setSocketConnectionStatus] = useState(false);
   const [displayStack, setdisplayStack] = useState(false);
-
   const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
+  const [type, setType] = useState("Text");
+
+  const handleSendImage = () => {
+    sendMessage("Media");
+    console.log("sent media");
+  };
+
+  const handleSendCamera = () => {
+    sendMessage("Camera");
+    console.log("Sent image from Camera");
+  };
+
+  const handleSendDocument = () => {
+    sendMessage("Document");
+    console.log("Sent document");
+  };
+
+  // handling type:
+  const handleType = (type) => {
+    if (type === "Document") {
+      handleSendDocument();
+    } else if (type === "Image") {
+      handleSendCamera();
+    } else {
+      handleSendImage();
+    }
+  };
 
   const toggleEmojiPicker = () => {
     setShowEmoji(!showEmoji);
@@ -48,7 +74,7 @@ const ChatArea = () => {
     setMessageContent(messageContent + emojiObject.emoji);
   };
 
-  const sendMessage = () => {
+  const sendMessage = (contentType) => {
     var data = null;
     const config = {
       headers: {
@@ -60,6 +86,7 @@ const ChatArea = () => {
         URL + "/message/",
         {
           content: messageContent,
+          contentType: contentType,
           chatId: chat_id,
         },
         config,
@@ -71,6 +98,9 @@ const ChatArea = () => {
         console.log(data.data);
         console.log("Message Fired");
         socket.emit("newMessage", data.data);
+      })
+      .catch((error) => {
+        console.error("Error sending message:", error);
       });
   };
 
@@ -88,13 +118,13 @@ const ChatArea = () => {
     {
       color: "#cfe1b9",
       icon: <CameraAltIcon size="34" />,
-      y: 172,
+      y: 182,
       title: "Image",
     },
     {
       color: "#b5c99a",
       icon: <InsertDriveFileIcon size="34" />,
-      y: 242,
+      y: 262,
       title: "Document",
     },
   ];
@@ -215,15 +245,18 @@ const ChatArea = () => {
               {Actions.map((el) => {
                 return (
                   <Tooltip placement="right" title={el.title}>
-                    <Fab
-                      sx={{
-                        position: "absolute",
-                        top: -el.y,
-                        backgroundColor: el.color,
-                      }}
-                    >
-                      {el.icon}
-                    </Fab>
+                    <IconButton onClick={() => handleType(el.title)}>
+                      <Fab
+                        sx={{
+                          position: "absolute",
+                          top: -el.y,
+                          right: -45,
+                          backgroundColor: el.color,
+                        }}
+                      >
+                        {el.icon}
+                      </Fab>
+                    </IconButton>
                   </Tooltip>
                 );
               })}
@@ -242,7 +275,7 @@ const ChatArea = () => {
             }}
             onKeyDown={(event) => {
               if (event.code === "Enter") {
-                sendMessage();
+                sendMessage("Text");
                 setShowEmoji(false);
                 setMessageContent("");
                 setRefresh(!refresh);

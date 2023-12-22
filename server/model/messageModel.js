@@ -6,6 +6,11 @@ const messageModel = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    contentType: {
+      type: String,
+      enum: ["Text", "Media", "Document", "Camera"],
+      default: "Text",
+    },
     content: {
       type: String,
       trim: true,
@@ -18,9 +23,12 @@ const messageModel = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
-    file: {
-      type: String,
-    },
+    // file: {
+    //   type: String,
+    // },
+    // text: {
+    //   type: String,
+    // },
   },
   {
     timestamps: true,

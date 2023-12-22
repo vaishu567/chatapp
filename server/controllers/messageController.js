@@ -9,6 +9,7 @@ const allMessages = asyncHandler(async (req, res) => {
       .populate("sender", "name email")
       .populate("receiver")
       .populate("content")
+      .populate("contentType")
       .populate("chat");
     res.json(messages);
   } catch (error) {
@@ -18,25 +19,27 @@ const allMessages = asyncHandler(async (req, res) => {
 });
 
 const sendMessage = asyncHandler(async (req, res) => {
-  const { content, chatId } = req.body;
-  if (!content || !chatId) {
+  const { content, contentType, chatId } = req.body;
+  if (!content || !contentType || !chatId) {
     return res.sendStatus(400);
   }
 
   var newMessage = {
     sender: req.user._id,
     content: content,
+    contentType: contentType,
     chat: chatId,
   };
   // console.log(newMessage);
 
   try {
     var message = await Message.create(newMessage);
-    // console.log(message);
+    console.log(message);
 
     message = await message.populate("sender", "name");
     message = await message.populate("content");
     message = await message.populate("chat");
+    message = await message.populate("contentType");
     message = await message.populate("receiver");
     message = await User.populate(message, {
       path: "chat.users",
