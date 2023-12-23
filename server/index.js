@@ -8,6 +8,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const path = require("path");
+const AudioCall = require("./model/audioCallModel");
 
 const app = express();
 
@@ -112,19 +113,118 @@ io.on("connection", (socket) => {
     });
   });
 
-  // socket.on("file_message", (data) => {
-  //   console.log("Received file message", data);
+  // Handle audio call socket events:
 
-  //   // data:{to,from,text,file}
+  // Start audio call
+  socket.on("start_audio_call", async (data) => {
+    const { senderId, receiverId, roomID } = data;
+    const to_user = await User.findById(receiverId);
+    const from_user = await User.findById(senderId);
 
-  //   // get the file extension
-  //   const fileExtension = path.extname(data.file.name);
+    console.log("to_user", to_user);
 
-  //   // generate a unique filename
-  //   const fileName = `${Date.now()}_${Math.floor(
-  //     Math.random() * 1000
-  //   )}${fileExtension}`;
+    // send notification to receiver of call
+    io.to(to_user?.socket_id).emit("audio_call_notification", {
+      from: from_user,
+      roomID,
+      streamID: senderId,
+      userID: receiverId,
+      userName: receiverId,
+    });
 
-  //   // upload file to AWS s3
-  // });
+    // Create a new audio call entry in the database
+    const audioCall = await AudioCall.create({
+      users: [senderId, receiverId],
+      sender: senderId,
+      receiver: receiverId,
+      callStatus: "Pending", // You might want to change this based on your requirements
+    });
+
+    // Emit an event to the sender and receiver to notify them of the call
+    io.to(senderId).emit("audio_call_request", { audioCall });
+    io.to(receiverId).emit("audio_call_request", { audioCall });
+  });
+
+  // handle audio_call_not_picked
+  socket.on("audio_call_not_picked", async (data) => {
+    console.log(data);
+    // find and update call record
+    const { senderId, receiverId } = data;
+
+    const to_user = await User.findById(receiverId);
+
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [receiverId, senderId] },
+      },
+      { verdict: "Missed", status: "Ended", endedAt: Date.now() }
+    );
+    // TODO => emit call_missed to receiver of call
+    io.to(to_user?.socket_id).emit("audio_call_missed", {
+      senderId,
+      receiverId,
+    });
+  });
+
+  // handle audio_call_accepted
+  socket.on("audio_call_accepted", async (data) => {
+    const { senderId, receiverId } = data;
+
+    const from_user = await User.findById(senderId);
+
+    // find and update call record
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [receiverId, senderId] },
+      },
+      { verdict: "Accepted" }
+    );
+
+    // TODO => emit call_accepted to sender of call
+    io.to(from_user?.socket_id).emit("audio_call_accepted", {
+      senderId,
+      receiverId,
+    });
+  });
+
+  // handle audio_call_denied
+  socket.on("audio_call_denied", async (data) => {
+    // find and update call record
+    const { senderId, receiverId } = data;
+
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [receiverId, senderId] },
+      },
+      { verdict: "Denied", status: "Ended", endedAt: Date.now() }
+    );
+
+    const from_user = await User.findById(senderId);
+    // TODO => emit call_denied to sender of call
+
+    io.to(from_user?.socket_id).emit("audio_call_denied", {
+      senderId,
+      receiverId,
+    });
+  });
+
+  // handle user_is_busy_audio_call
+  socket.on("user_is_busy_audio_call", async (data) => {
+    const { senderId, receiverId } = data;
+
+    // find and update call record
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [receiverId, senderId] },
+      },
+      { verdict: "Busy", status: "Ended", endedAt: Date.now() }
+    );
+
+    const from_user = await User.findById(senderId);
+    // TODO => emit on_another_audio_call to sender of call
+    io.to(from_user?.socket_id).emit("on_another_audio_call", {
+      senderId,
+      receiverId,
+    });
+  });
 });

@@ -21,6 +21,22 @@ import ImageIcon from "@mui/icons-material/Image";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import CloseIcon from "@mui/icons-material/Close";
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 var socket;
 const ChatArea = () => {
@@ -35,7 +51,28 @@ const ChatArea = () => {
   const [displayStack, setdisplayStack] = useState(false);
   const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
-  const [type, setType] = useState("Text");
+  const [displayvoice, setDisplayvoice] = useState(false);
+  const [openvoice, setOpenvoice] = React.useState(false);
+  const [openvideo, setOpenvideo] = React.useState(false);
+  const [displayvideo, setDisplayvideo] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenvoice(true);
+    setDisplayvoice(true);
+  };
+
+  const handleClickOpenVideo = () => {
+    setOpenvideo(true);
+    setDisplayvideo(true);
+  };
+
+  const handleClosevideo = () => {
+    setOpenvideo(false);
+  };
+
+  const handleClose = () => {
+    setOpenvoice(false);
+  };
 
   const handleSendImage = () => {
     sendMessage("Media");
@@ -205,18 +242,89 @@ const ChatArea = () => {
             <p className="con-title">{chat_user}</p>
           </div>
           <div className="call-icon">
-            <IconButton>
+            <IconButton onClick={handleClickOpenVideo}>
               <VideocamOutlinedIcon />
             </IconButton>
             <p className="v"></p>
-            <IconButton>
+            <IconButton onClick={handleClickOpen}>
               <CallOutlinedIcon />
             </IconButton>
           </div>
           <div>
-            {/* <IconButton>
-              <DeleteIcon />
-            </IconButton> */}
+            {displayvoice && (
+              <React.Fragment>
+                {/* <Button variant="outlined" onClick={handleClickOpen}>
+                  Open dialog
+                </Button> */}
+                <BootstrapDialog
+                  onClose={handleClose}
+                  aria-labelledby="customized-dialog-title"
+                  open={openvoice}
+                >
+                  <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                    Modal title
+                  </DialogTitle>
+                  <IconButton
+                    aria-label="close"
+                    onClick={handleClose}
+                    sx={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                      color: (theme) => theme.palette.grey[500],
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                  <DialogContent dividers>
+                    <div className="voiceContainer"></div>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button autoFocus onClick={handleClose}>
+                      Save changes
+                    </Button>
+                  </DialogActions>
+                </BootstrapDialog>
+              </React.Fragment>
+            )}
+          </div>
+          <div>
+            {displayvideo && (
+              <React.Fragment>
+                {/* <Button variant="outlined" onClick={handleClickOpen}>
+                  Open dialog
+                </Button> */}
+                <BootstrapDialog
+                  onClose={handleClosevideo}
+                  aria-labelledby="customized-dialog-title"
+                  open={openvideo}
+                >
+                  <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                    Modal title
+                  </DialogTitle>
+                  <IconButton
+                    aria-label="close"
+                    onClick={handleClosevideo}
+                    sx={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                      color: (theme) => theme.palette.grey[500],
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                  <DialogContent dividers>
+                    <div className="voiceContainer"></div>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button autoFocus onClick={handleClosevideo}>
+                      Save changes
+                    </Button>
+                  </DialogActions>
+                </BootstrapDialog>
+              </React.Fragment>
+            )}
           </div>
         </div>
 
