@@ -9,6 +9,7 @@ const AudioCall = require("../model/audioCallModel");
 const appID = process.env.ZEGO_APP_ID;
 
 const serverSecret = process.env.ZEGO_SERVER_SECRET;
+
 const loginController = asyncHandler(async (req, res) => {
   const { name, password } = req.body;
   const user = await userModel.findOne({ name });
@@ -129,11 +130,20 @@ const generateZegoToken = asyncHandler(async (req, res, next) => {
 });
 
 const startAudioCall = asyncHandler(async (req, res, next) => {
-  const senderId = req.user._id;
-  const receiverId = req.body.id;
+  const { senderId, name, receiverId } = req.body;
+  const user = await userModel.findOne({ name });
+  if (!user) {
+    return res.status(404).json("User not found!");
+  }
 
-  const from_user = await User.findById(senderId);
-  const to_user = await User.findById(receiverId);
+  // const senderId = await userModel.findOne({ name });
+
+  console.log(user);
+  // const senderId = null;
+  const to_user = await userModel.findById(receiverId);
+  if (!senderId && !to_user) {
+    res.status(404).json("either user not found");
+  }
 
   // create a new call audioCall Doc and send required data to client
   const new_audio_call = await AudioCall.create({
@@ -149,7 +159,7 @@ const startAudioCall = asyncHandler(async (req, res, next) => {
       roomID: new_audio_call._id,
       streamID: receiverId,
       userID: senderId,
-      userName: senderId,
+      userName: name,
     },
   });
 });

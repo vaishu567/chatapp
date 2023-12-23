@@ -15,7 +15,7 @@ router.post("/login", loginController);
 router.post("/register", registerController);
 router.get("/logout", logoutController);
 router.get("/fetchUsers", protect, fetchAllUsersController);
-router.post("/generate-zego-token", protect, generateZegoToken);
-router.post("/start-audio-call", protect, startAudioCall);
+router.post("/generate-zego-token", generateZegoToken);
+router.post("/start-audio-call", startAudioCall);
 
 module.exports = router;
