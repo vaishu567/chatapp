@@ -1,10 +1,9 @@
 import axios from "axios";
-// config
-import { URL } from "../url";
 
-// ----------------------------------------------------------------------
+// Set your baseURL directly
+const baseURL = "http://localhost:5000";
 
-const axiosInstance = axios.create({ baseURL: URL });
+const axiosInstance = axios.create({ baseURL });
 
 axiosInstance.interceptors.response.use(
   (response) => response,

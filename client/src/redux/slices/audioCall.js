@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { socket } from "../../socket";
-import axios from "../../utils/axios";
+import axios from "../../util/axios";
 
 const initialState = {
   open_audio_dialog: false,
@@ -8,6 +8,7 @@ const initialState = {
   call_queue: [], // can have max 1 call at any point of time
   incoming: false,
 };
+const userData = JSON.parse(sessionStorage.getItem("userData"));
 
 const slice = createSlice({
   name: "audioCall",
@@ -48,3 +49,55 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
+
+// --------------------------------------------------
+export const StartAudioCall = (id) => {
+  return async (dispatch, getState) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+
+        authorization: `Bearer ${userData.data.token}`,
+      },
+    };
+    dispatch(slice.actions.resetAudioCallQueue());
+    axios
+      .post("/user/start-audio-call", { id }, config)
+      .then((response) => {
+        console.log(response);
+        dispatch(
+          slice.actions.pushToAudioCallQueue({
+            call: response.data.data,
+            incoming: false,
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+};
+
+export const PushToAudioCallQueue = (call) => {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.pushToAudioCallQueue({ call, incoming: true }));
+  };
+};
+
+export const ResetAudioCallQueue = () => {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.resetAudioCallQueue());
+  };
+};
+
+export const CloseAudioNotificationDialog = () => {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.closeNotificationDialog());
+  };
+};
+
+export const UpdateAudioCallDialog = ({ state }) => {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.updateCallDialog({ state }));
+  };
+};
