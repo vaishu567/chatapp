@@ -28,6 +28,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import CloseIcon from "@mui/icons-material/Close";
+import CallElement from "../Audio/AudioCallElement";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -52,9 +53,9 @@ const ChatArea = () => {
   const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
   const [displayvoice, setDisplayvoice] = useState(false);
-  const [openvoice, setOpenvoice] = React.useState(false);
   const [openvideo, setOpenvideo] = React.useState(false);
   const [displayvideo, setDisplayvideo] = useState(false);
+  const [openvoice, setOpenvoice] = useState(false);
 
   const handleClickOpen = () => {
     setOpenvoice(true);
@@ -68,10 +69,6 @@ const ChatArea = () => {
 
   const handleClosevideo = () => {
     setOpenvideo(false);
-  };
-
-  const handleClose = () => {
-    setOpenvoice(false);
   };
 
   const handleSendImage = () => {
@@ -252,40 +249,7 @@ const ChatArea = () => {
           </div>
           <div>
             {displayvoice && (
-              <React.Fragment>
-                {/* <Button variant="outlined" onClick={handleClickOpen}>
-                  Open dialog
-                </Button> */}
-                <BootstrapDialog
-                  onClose={handleClose}
-                  aria-labelledby="customized-dialog-title"
-                  open={openvoice}
-                >
-                  <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                    Modal title
-                  </DialogTitle>
-                  <IconButton
-                    aria-label="close"
-                    onClick={handleClose}
-                    sx={{
-                      position: "absolute",
-                      right: 8,
-                      top: 8,
-                      color: (theme) => theme.palette.grey[500],
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                  <DialogContent dividers>
-                    <div className="voiceContainer"></div>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                      Save changes
-                    </Button>
-                  </DialogActions>
-                </BootstrapDialog>
-              </React.Fragment>
+              <CallElement open={openvoice} setOpenvoice={setOpenvoice} />
             )}
           </div>
           <div>
